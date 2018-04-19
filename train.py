@@ -125,7 +125,7 @@ def train():
             # Pre-trained word2vec
             if FLAGS.word2vec:
                 # initial matrix with random uniform
-                initW = np.random.uniform(-0.25, 0.25, (len(text_vocab_processor.vocabulary_), FLAGS.text_embedding_dim))
+                initW = np.random.uniform(-0.25, 0.25, (len(text_vocab_processor.vocabulary_), FLAGS.embedding_dim))
                 # load any vectors from the word2vec
                 print("Load word2vec file {0}".format(FLAGS.word2vec))
                 with open(FLAGS.word2vec, "rb") as f:
@@ -161,9 +161,8 @@ def train():
                     rnn.input_y: y_batch,
                     rnn.dropout_keep_prob: FLAGS.dropout_keep_prob
                 }
-                _, step, summaries, loss, accuracy, a, b, c = sess.run(
-                    [train_op, global_step, train_summary_op, rnn.loss, rnn.accuracy,
-                     rnn.temp, rnn.h_outputs, rnn.all_outputs], feed_dict)
+                _, step, summaries, loss, accuracy = sess.run(
+                    [train_op, global_step, train_summary_op, rnn.loss, rnn.accuracy], feed_dict)
                 train_summary_writer.add_summary(summaries, step)
 
                 # Training log display
