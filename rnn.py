@@ -11,7 +11,7 @@ class RNN:
         self.dropout_keep_prob = tf.placeholder(tf.float32, name='dropout_keep_prob')
 
         l2_loss = tf.constant(0.0)
-        text_length = self.length(self.input_text)
+        text_length = self._length(self.input_text)
 
         # Embedding layer
         with tf.device('/cpu:0'), tf.name_scope("text-embedding"):
@@ -20,7 +20,7 @@ class RNN:
 
         # Recurrent Neural Network
         with tf.name_scope("rnn"):
-            cell = self.get_cell(hidden_size, cell_type)
+            cell = self._get_cell(hidden_size, cell_type)
             cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=0.5)
             all_outputs, _ = tf.nn.dynamic_rnn(cell=cell,
                                                inputs=self.embedded_chars,
@@ -48,7 +48,7 @@ class RNN:
             self.accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32), name="accuracy")
 
     @staticmethod
-    def get_cell(hidden_size, cell_type):
+    def _get_cell(hidden_size, cell_type):
         if cell_type == "vanilla":
             return tf.nn.rnn_cell.BasicRNNCell(hidden_size)
         elif cell_type == "lstm":
@@ -61,7 +61,7 @@ class RNN:
 
     # Length of the sequence data
     @staticmethod
-    def length(seq):
+    def _length(seq):
         relevant = tf.sign(tf.abs(seq))
         length = tf.reduce_sum(relevant, reduction_indices=1)
         length = tf.cast(length, tf.int32)
