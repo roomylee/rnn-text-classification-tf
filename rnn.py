@@ -21,7 +21,7 @@ class RNN:
         # Recurrent Neural Network
         with tf.name_scope("rnn"):
             cell = self._get_cell(hidden_size, cell_type)
-            cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=0.5)
+            cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=self.dropout_keep_prob)
             all_outputs, _ = tf.nn.dynamic_rnn(cell=cell,
                                                inputs=self.embedded_chars,
                                                sequence_length=text_length,
